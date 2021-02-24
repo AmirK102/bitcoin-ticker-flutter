@@ -4,6 +4,8 @@ import 'coin_data.dart';
 import 'dart:io' show Platform;
 
 class PriceScreen extends StatefulWidget {
+  PriceScreen({this.getJesonData});
+  final getJesonData;
   @override
   _PriceScreenState createState() => _PriceScreenState();
 }
@@ -12,7 +14,7 @@ class _PriceScreenState extends State<PriceScreen> {
   CoinData coindat = CoinData();
   String newDropdownValue = 'USD';
   int SelectedCupertinoValue = 1;
-  double BtcToUsd;
+  double BtcToUsd = 0.0;
   var jsonData;
 
 // for android dropdown
@@ -29,8 +31,11 @@ class _PriceScreenState extends State<PriceScreen> {
     return DropdownButton(
       value: newDropdownValue,
       dropdownColor: Colors.lightBlue,
-      onChanged: (value) {
+      onChanged: (value) async {
+        var UpdateJeson;
+        UpdateJeson = await coindat.getDataFromAPI(value);
         setState(() {
+          UpdatUI(UpdateJeson);
           newDropdownValue = value;
         });
       },
@@ -63,8 +68,9 @@ class _PriceScreenState extends State<PriceScreen> {
     setState(() {
       if (coindata == null) {
         print("can't get data from Api");
+      } else {
+        BtcToUsd = coindata['rate'];
       }
-      BtcToUsd = 50940.38453568355;
     });
   }
 
@@ -72,8 +78,7 @@ class _PriceScreenState extends State<PriceScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    jsonData = coindat.getDataFromAPI();
-    UpdatUI(jsonData);
+    //UpdatUI(widget.getJesonData);
   }
 
   @override
@@ -97,7 +102,7 @@ class _PriceScreenState extends State<PriceScreen> {
               child: Padding(
                 padding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 28.0),
                 child: Text(
-                  '1 BTC = ${BtcToUsd} USD',
+                  '1 BTC = ${BtcToUsd.toStringAsFixed(2)} $newDropdownValue',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 20.0,

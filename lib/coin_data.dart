@@ -32,11 +32,12 @@ const List<String> cryptoList = [
 
 class CoinData {
   //get data from API
-  Future getDataFromAPI() async {
+  Future getDataFromAPI(currency) async {
     var decodedData;
+    currency = currency.toString();
     NetworkHelper networking = NetworkHelper(
         URL:
-            "https://rest.coinapi.io/v1/exchangerate/BTC/USD?apikey=8C1F225D-3E48-40CF-96FE-88AD0604B41D");
+            "https://rest.coinapi.io/v1/exchangerate/BTC/$currency?apikey=8C1F225D-3E48-40CF-96FE-88AD0604B41D");
     decodedData = await networking.getJesonData();
     print(decodedData);
     return decodedData;
